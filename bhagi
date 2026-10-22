@@ -1,0 +1,61 @@
+
+import javafx.application.Application;
+import javafx.geometry.*;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
+import javafx.stage.Stage;
+
+public class TipCalculator extends Application {
+
+    @Override
+    public void start(Stage stage) {
+        Label title = new Label("Tip Calculator");
+        Label billLabel = new Label("Bill Amount:");
+        TextField billField = new TextField();
+
+        Label tipLabel = new Label("Tip Percentage:");
+        ComboBox<Integer> tipBox = new ComboBox<>();
+        tipBox.getItems().addAll(5, 10, 15, 20);
+        tipBox.setValue(10);
+
+        Button calculate = new Button("Calculate");
+        Label result = new Label();
+
+        calculate.setOnAction(e -> {
+            try {
+                double bill = Double.parseDouble(
+                    billField.getText());
+                int tip = tipBox.getValue();
+
+                if (bill < 0) {
+                    result.setText("Enter a valid bill amount.");
+                    return;
+                }
+
+                double tipAmount = bill * tip / 100.0;
+                double total = bill + tipAmount;
+
+                result.setText(String.format(
+                    "Tip: %.2f\nTotal: %.2f",
+                    tipAmount, total));
+
+            } catch (NumberFormatException ex) {
+                result.setText("Please enter a valid amount.");
+            }
+        });
+
+        VBox root = new VBox(12, title, billLabel,
+            billField, tipLabel, tipBox, calculate, result);
+        root.setPadding(new Insets(20));
+        root.setAlignment(Pos.CENTER);
+
+        stage.setTitle("Tip Calculator");
+        stage.setScene(new Scene(root, 350, 350));
+        stage.show();
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+}
